@@ -28,6 +28,8 @@ extern "C" {
  */
 void camera_report(uint8_t instance_id, uint8_t mode, int16_t v1, int16_t v2, int16_t v3, int16_t v4);
 
+void lump_camera_init(void);
+
 void lump_camera_set_12pos_color(int8_t color_lists[3][4]);
 
 void lump_camera_report_12pos_color(uint8_t instance_id);

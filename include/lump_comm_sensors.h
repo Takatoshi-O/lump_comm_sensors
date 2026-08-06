@@ -59,6 +59,8 @@ bool is_valid_mode(uint8_t mode);
  */
 void sensor_report_status(lump_sensor_type_t type, uint8_t instance_id, int16_t status);
 
+void lump_sensors_start(void);
+
 #ifdef __cplusplus
 }
 #endif
