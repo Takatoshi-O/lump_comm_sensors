@@ -1,0 +1,14 @@
+idf_component_register(
+    SRCS
+        "src/lump_comm_sensors.c"
+        "src/lump_command_dispatch.c"
+        "src/lump_comm_color.c"
+        "src/lump_comm_camera.c"
+    INCLUDE_DIRS
+        "include"
+    PRIV_INCLUDE_DIRS
+        "."
+    REQUIRES
+        lump_comm
+        freertos
+)
