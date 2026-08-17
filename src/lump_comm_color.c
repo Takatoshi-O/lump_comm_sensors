@@ -18,7 +18,7 @@ typedef enum {
     COLOR_MODE_SYSTEM = 0,
     COLOR_MODE_RGBC = 1,
     COLOR_MODE_COLOR_ID = 2,
-    COLOR_MODE_AUTO_COLOR = 3,
+    COLOR_MODE_NOTIFY_COLOR = 3,
 } color_sensor_mode_t;
 
 typedef struct {
@@ -72,6 +72,13 @@ void lump_color_report_color_id(uint8_t instance_id)
     lump_device_report(LUMP_SENSOR_COLOR, COLOR_MODE_COLOR_ID, instance_id, s_color_buffer[instance_id].color_id, 0, 0, 0);
 }
 
+void lump_color_notify_color_id(uint8_t instance_id) 
+{
+    if (!color_sensor_is_instance_active(instance_id)) return;
+    if (!is_valid_mode(COLOR_MODE_COLOR_ID)) return; /* 念のため(定数なので実際には外れない) */
+    lump_device_report(LUMP_SENSOR_COLOR, COLOR_MODE_NOTIFY_COLOR, instance_id, s_color_buffer[instance_id].color_id, 0, 0, 0);
+}
+
 void lump_color_report_rgbc(uint8_t instance_id) 
 {
     if (!color_sensor_is_instance_active(instance_id)) return;
@@ -84,13 +91,13 @@ void lump_color_report_rgbc(uint8_t instance_id)
                         );
 }
 
-static void color_sensor_systems(uint8_t instance_id, uint8_t seq, int16_t v1, int16_t v2, int16_t v3, int16_t v4)
+static void color_sensor_systems(uint8_t instance_id, int16_t v1, int16_t v2, int16_t v3, int16_t v4)
 {
-    switch (seq)
+    switch (v1)
     {
     case LUMP_SENSOR_INIT:
         if (instance_id >= LUMP_MAX_INSTANCES_PER_TYPE) return;
-        s_color_instance_active[instance_id] = (v1 != 0);
+        s_color_instance_active[instance_id] = (v2 != 0);
         break;
     case LUMP_COLOR_CALIB:
         if (instance_id >= LUMP_MAX_INSTANCES_PER_TYPE)
@@ -98,13 +105,13 @@ static void color_sensor_systems(uint8_t instance_id, uint8_t seq, int16_t v1, i
             for (int i = 0; i < LUMP_MAX_INSTANCES_PER_TYPE; i++)
             {
                 s_calib_request[i].pending = true;
-                s_calib_request[i].color_id = v1;
+                s_calib_request[i].color_id = v2;
             }
         }
         else
         {
             s_calib_request[instance_id].pending = true;
-            s_calib_request[instance_id].color_id = v1;
+            s_calib_request[instance_id].color_id = v2;
         }
         calib_request = true;
         break;
@@ -186,11 +193,11 @@ static void on_color_sensor_command(uint8_t instance_id, uint8_t command, uint8_
     case COLOR_MODE_COLOR_ID:
         lump_color_report_color_id(instance_id);
         break;
-    case COLOR_MODE_AUTO_COLOR:
+    case COLOR_MODE_NOTIFY_COLOR:
         handle_watch_config(instance_id, v1, v2);
         break;
     case COLOR_MODE_SYSTEM:
-        color_sensor_systems(instance_id, seq, v1, v2, v3, v4);
+        color_sensor_systems(instance_id, v1, v2, v3, v4);
         break;
     default:
         break;

@@ -21,22 +21,48 @@ extern "C" {
 
 #define LUMP_SENSOR_CAMERA LUMP_TYPE_2
 
+typedef struct 
+{
+    bool isrequest;
+    uint8_t instanceID;
+    int16_t x, y;
+    uint8_t px_size;
+} request_get_color_t;
+
+typedef struct 
+{
+    bool isrequest;
+    uint8_t instanceID;
+    int16_t data_list;
+    uint8_t px_size;
+} request_get_12pos_color_t;
+
 /*
  * カメラの汎用送信API。将来のモード追加時に、このAPIをラップする形で
  * camera_report_position() 等の専用関数を追加していく想定。
  * mode: camera_mode_t の値を使うこと(0と31は使用禁止)
  */
-void camera_report(uint8_t instance_id, uint8_t mode, int16_t v1, int16_t v2, int16_t v3, int16_t v4);
-
 void lump_camera_init(void);
 
-void lump_camera_set_12pos_color(int8_t color_lists[3][4]);
+void camera_sensor_instance_active(uint8_t instance_id);
 
-void lump_camera_report_12pos_color(uint8_t instance_id);
+bool camera_sensor_is_instance_active(uint8_t instance_id);
 
-bool lump_color_is_calib_request();
+void lump_camera_report_color(uint8_t instance_id);
 
-void lump_color_calib_fin();
+void lump_camera_set_color(uint8_t instanceID, int16_t y, int16_t u, int16_t v, int16_t colorID);
+
+void lump_camera_set_12pos_color(uint8_t color_lists[3][4]);
+
+void lump_camera_report_12pos_color(uint8_t instance_id, uint8_t data_list);
+
+request_get_color_t lump_camera_is_request_color();
+
+void lump_camera_request_color_fin();
+
+request_get_12pos_color_t lump_camera_is_request_12pos_color();
+
+void lump_camera_request_12pos_color_fin();
 
 #ifdef __cplusplus
 }

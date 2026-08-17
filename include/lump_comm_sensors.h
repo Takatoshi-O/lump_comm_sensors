@@ -31,7 +31,7 @@ typedef enum {
     COLOR_LIME,
     COLOR_NAVY,
     COLOR_UNKNOWN,
-} color_id_t;
+} lump_color_id_t;
 
 /*
  * lump_device ライブラリの上に乗るセンサー別APIレイヤー。
