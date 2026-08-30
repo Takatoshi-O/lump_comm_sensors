@@ -10,27 +10,27 @@ extern "C" {
 
 /* ===================== 初期設定 ===================== */
 
-#define LUMP_MAX_INSTANCES_PER_TYPE 16
+#define LUMP_MAX_INSTANCES_PER_TYPE 8
 #define LUMP_SENSOR_INIT 0
 
 //Color ID
 typedef enum {
-    COLOR_BLACK = 0,
-    COLOR_WHITE,
-    COLOR_RED,
-    COLOR_GREEN,
-    COLOR_BLUE,
-    COLOR_YELLOW,
-    COLOR_ORANGE,
-    COLOR_PURPLE,
-    COLOR_CYAN,
-    COLOR_MAGENTA,
-    COLOR_BROWN,
-    COLOR_GRAY,
-    COLOR_PINK,
-    COLOR_LIME,
-    COLOR_NAVY,
-    COLOR_UNKNOWN,
+    LUMP_COLOR_UNKNOWN = 0,
+    LUMP_COLOR_BLACK,
+    LUMP_COLOR_WHITE,
+    LUMP_COLOR_RED,
+    LUMP_COLOR_GREEN,
+    LUMP_COLOR_BLUE,
+    LUMP_COLOR_YELLOW,
+    LUMP_COLOR_ORANGE,
+    LUMP_COLOR_PURPLE,
+    LUMP_COLOR_CYAN,
+    LUMP_COLOR_MAGENTA,
+    LUMP_COLOR_BROWN,
+    LUMP_COLOR_GRAY,
+    LUMP_COLOR_PINK,
+    LUMP_COLOR_LIME,
+    LUMP_COLOR_NAVY,
 } lump_color_id_t;
 
 /*
@@ -43,13 +43,6 @@ typedef enum {
  *   31  = キャリブレーション予約(lump_deviceが内部使用。このAPIからは使用禁止)
  */
 
-/*
- * モード番号の使用禁止チェック。
- * 0=初期設定予約のためアサートで弾く。
- * このチェックを通過したモードのみ lump_device_report() へ渡す。
- */
-bool is_valid_mode(uint8_t mode); 
-
 /* ===================== 共通: 初期設定モード(モード0) ===================== */
 
 /*
@@ -60,6 +53,12 @@ bool is_valid_mode(uint8_t mode);
 void sensor_report_status(lump_sensor_type_t type, uint8_t instance_id, int16_t status);
 
 void lump_sensors_start(void);
+
+const char *lump_color_id_to_char(lump_color_id_t color);
+
+void lump_calib_start();
+
+void lump_sersors_register();
 
 #ifdef __cplusplus
 }

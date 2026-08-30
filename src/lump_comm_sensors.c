@@ -5,17 +5,10 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
-/* ===================== 内部ヘルパー ===================== */
+#include "camera_yuv_query.h"
+#include "camera_color.h"
 
-/*
- * モード番号の使用禁止チェック。
- * 0=初期設定予約のためアサートで弾く。
- * このチェックを通過したモードのみ lump_device_report() へ渡す。
- */
-bool is_valid_mode(uint8_t mode) 
-{
-    return mode != 0;
-}
+
 
 /* ===================== 共通: 初期設定モード(モード0) ===================== */
 
@@ -35,7 +28,30 @@ static void lump_sensors_task(void *arg) {
 }
 
 void lump_sensors_start(void) {
-    lump_camera_init();
-    lump_color_init();
     xTaskCreate(lump_sensors_task, "lump_sensors", 4096, NULL, 8, NULL);
 }
+
+const char *lump_color_id_to_char(lump_color_id_t color)
+{
+    switch (color) 
+    {
+    case LUMP_COLOR_BLACK:   return "BLACK";
+    case LUMP_COLOR_WHITE:   return "WHITE";
+    case LUMP_COLOR_RED:     return "RED";
+    case LUMP_COLOR_GREEN:   return "GREEN";
+    case LUMP_COLOR_BLUE:    return "BLUE";
+    case LUMP_COLOR_YELLOW:  return "YELLOW";
+    case LUMP_COLOR_ORANGE:  return "ORANGE";
+    case LUMP_COLOR_PURPLE:  return "PURPLE";
+    case LUMP_COLOR_CYAN:    return "CYAN";
+    case LUMP_COLOR_MAGENTA: return "MAGENTA";
+    case LUMP_COLOR_BROWN:   return "BROWN";
+    case LUMP_COLOR_GRAY:    return "GRAY";
+    case LUMP_COLOR_PINK:    return "PINK";
+    case LUMP_COLOR_LIME:    return "LIME";
+    case LUMP_COLOR_NAVY:    return "NAVY";
+    case LUMP_COLOR_UNKNOWN: 
+    default:                 return "?";
+    }
+}
+

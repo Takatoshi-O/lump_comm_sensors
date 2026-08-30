@@ -1,0 +1,35 @@
+menu "LUMP comm sensors Configuration"
+
+    menu "Avaliable sensor"
+        
+        config COLOR_SENSOR_AVAILABLE
+        bool "Color sensor Avaliable"
+        default n
+        help
+            Is color sensor available.
+
+        config CAMERA_AVAILABLE
+        bool "Camera Avaliable"
+        default n
+        help
+            Is camera available.
+
+    endmenu
+
+    menu "Sensor calibration"
+
+        config COLOR_CALIB_ENABLE
+        bool "Enable color sensor calibration"
+        default n
+        help
+            Enable the color sensor calibration program.
+
+        config CAMERA_CALIB_ENABLE
+        bool "Enable camera calibration"
+        default n
+        help
+            Enable the camera calibration program.
+    
+    endmenu
+
+endmenu

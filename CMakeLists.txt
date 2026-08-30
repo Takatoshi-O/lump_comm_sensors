@@ -4,11 +4,20 @@ idf_component_register(
         "src/lump_command_dispatch.c"
         "src/lump_comm_color.c"
         "src/lump_comm_camera.c"
+        "src/lump_comm_calib.c"
+        "src/lump_comm_cam_calib.c"
+        "src/lump_comm_color_calib.c"
+        "src/lump_sensors_register.c"
     INCLUDE_DIRS
         "include"
     PRIV_INCLUDE_DIRS
         "."
+        "src"
     REQUIRES
         lump_comm
         freertos
+        lcd_lvgl
+        nvs_manager
+        camera_manager
+        color_sensor
 )
