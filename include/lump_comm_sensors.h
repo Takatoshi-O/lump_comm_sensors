@@ -1,4 +1,8 @@
 #pragma once
+/**
+ * @file lump_comm_sensors.h
+ * @brief LUMP通信に接続するセンサー共通の状態通知、起動、色ID変換、キャリブレーション関連APIを定義します。
+ */
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,10 +14,15 @@ extern "C" {
 
 /* ===================== 初期設定 ===================== */
 
+/** @brief 1種類のセンサー種別で管理できるインスタンス数の最大値です。 */
 #define LUMP_MAX_INSTANCES_PER_TYPE 8
+/** @brief 初期化・状態通知に使用する予約モード番号です。 */
 #define LUMP_SENSOR_INIT 0
 
 //Color ID
+/**
+ * @brief LUMPセンサーAPIで共通利用する色IDです。
+ */
 typedef enum {
     LUMP_COLOR_UNKNOWN = 0,
     LUMP_COLOR_BLACK,
@@ -50,14 +59,30 @@ typedef enum {
  * 起動直後の初期化完了通知や、エラー状態の通知に使う。
  *   status: 0=初期化中, 1=初期化完了, 負値=エラーコード
  */
+/**
+ * @brief センサーの初期化状態やエラー状態をLUMPへ通知します。
+ *
+ * @param type センサー種別です。
+ * @param instance_id センサーインスタンスIDです。
+ * @param status 状態値です。
+ */
 void sensor_report_status(lump_sensor_type_t type, uint8_t instance_id, int16_t status);
 
+/** @brief センサー共通のバックグラウンド処理を開始します。 */
 void lump_sensors_start(void);
 
+/**
+ * @brief 色IDを表示用の文字列へ変換します。
+ *
+ * @param color 変換する色IDです。
+ * @return 色名文字列へのポインタです。
+ */
 const char *lump_color_id_to_char(lump_color_id_t color);
 
+/** @brief センサーキャリブレーション管理タスクを開始します。 */
 void lump_calib_start();
 
+/** @brief 有効化されたセンサーのコールバック実装をLUMPセンサー層へ登録します。 */
 void lump_sersors_register();
 
 #ifdef __cplusplus

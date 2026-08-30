@@ -1,4 +1,8 @@
 #pragma once
+/**
+ * @file lump_command_dispatch.h
+ * @brief 受信コマンドをセンサー種別ごとの登録済みハンドラへ振り分ける内部ディスパッチAPIを定義します。
+ */
 
 #include <stdint.h>
 #include "lump_comm.h"
@@ -23,6 +27,11 @@ extern "C" {
  *               (0はSPIKE統合済みの初期設定/キャリブレーション用と解釈すること)
  * seq         : 送信側のシーケンス番号(重複判定などに使いたい場合に利用)
  */
+/**
+ * @brief センサー種別ごとの受信コマンドを処理するハンドラ関数型です。
+ *
+ * コマンドと4つの16bit引数を受け取り、該当センサーの状態を更新します。
+ */
 typedef void (*lump_command_handler_t)(uint8_t instance_id, uint8_t command, uint8_t seq,
                                         int16_t v1, int16_t v2, int16_t v3, int16_t v4);
 
@@ -30,6 +39,12 @@ typedef void (*lump_command_handler_t)(uint8_t instance_id, uint8_t command, uin
  * センサー種別ごとにハンドラを1つ登録する。
  * 同じ種別に対して再度呼ぶと、以前のハンドラを上書きする。
  * handler に NULL を渡すと、その種別の登録を解除する。
+ */
+/**
+ * @brief 指定センサー種別にコマンドハンドラを登録します。
+ *
+ * 同じ種別を再登録すると、既存ハンドラを上書きします。
+ * NULLを渡すと登録を解除します。
  */
 void lump_command_dispatch_register(lump_sensor_type_t type, lump_command_handler_t handler);
 
@@ -39,6 +54,11 @@ void lump_command_dispatch_register(lump_sensor_type_t type, lump_command_handle
  * ハンドラが登録されていない種別のコマンドは、読み捨てられる。
  *
  * メインループやタスクの中で定期的に呼ぶこと。
+ */
+/**
+ * @brief コマンドキューの未処理エントリをすべて取り出してハンドラへ振り分けます。
+ *
+ * メインループやタスクから定期的に呼び出します。
  */
 void lump_command_dispatch_poll(void);
 
